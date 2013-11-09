@@ -13,5 +13,7 @@ add_executable("tic-tac-ai"
 	"src/game.cpp"
 	"src/dumb_ai_player.h"
 	"src/dumb_ai_player.cpp"
+  "src/tree_ai_player.h"
+  "src/tree_ai_player.cpp"
 )
 

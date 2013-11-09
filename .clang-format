@@ -1,0 +1,8 @@
+BasedOnStyle: Google
+
+AccessModifierOffset: -2
+AlignEscapedNewlinesLeft: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerIndentWidth: 2

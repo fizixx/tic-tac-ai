@@ -7,11 +7,12 @@
 
 class DumbAIPlayer : public Player {
 public:
-	DumbAIPlayer();
-	virtual ~DumbAIPlayer();
-	
-	virtual size_t GetMove(const Board& board, bool previousMoveWasValid);
-	virtual void ReportWinner(const Board& board);
+  DumbAIPlayer();
+  virtual ~DumbAIPlayer();
+
+  virtual size_t GetMove(const Board& board, bool previousMoveWasValid);
+  virtual void AfterMove(const Board& board);
+  virtual void ReportWinner(const Board& board);
 };
 
 #endif  // DUMB_PLAYER_H_
