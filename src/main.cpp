@@ -25,10 +25,11 @@ int main() {
 
   Game game;
 
-  TreeAIPlayer* smartPlayer = new TreeAIPlayer;
-  smartPlayer->setIsTraining(true);
+#if 1
+  TreeAIPlayer* smartPlayer1 = new TreeAIPlayer;
+  smartPlayer1->setIsTraining(true);
 
-  game.setPlayer1(smartPlayer);
+  game.setPlayer1(smartPlayer1);
   game.setPlayer2(new DumbAIPlayer);
 
   for (auto i = 0; i < 100000; ++i) {
@@ -39,9 +40,14 @@ int main() {
   }
 
   // Now play against the trained AI.
-  smartPlayer->setIsTraining(false);
-  game.setPlayer2(new HumanPlayer);
+  smartPlayer1->setIsTraining(false);
+  game.setPlayer1(new HumanPlayer);
   game.play(true);
-
+#else
+  game.setPlayer1(new HumanPlayer);
+  game.setPlayer2(new DumbAIPlayer);
+  game.play(true);
+#endif  // 0
+  
   return 0;
 }

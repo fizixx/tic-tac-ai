@@ -23,9 +23,8 @@ public:
   ~HumanPlayer() override;
 
   // Override: Player
-  size_t getMove(const Board& board, char you,
-                 bool previousMoveWasValid) override;
-  void reportWinner(const Board& board, bool won) override;
+  size_t getMove(const Board& board, char you) override;
+  void reportWinner(const Board& board, WinType winType) override;
 };
 
 #endif  // HUMAN_PLAYER_H_

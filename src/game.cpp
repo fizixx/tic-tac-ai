@@ -50,7 +50,7 @@ void Game::play(bool printSteps, std::ostream& os) {
         size_t move = 9;
         size_t invalidMoveCount = 0;
         do {
-          move = m_player1->getMove(m_board, 'X', true);
+          move = m_player1->getMove(m_board, 'X');
           ++invalidMoveCount;
           //if (invalidMoveCount > 9) {
           //  assert(false);
@@ -69,7 +69,7 @@ void Game::play(bool printSteps, std::ostream& os) {
         size_t move = 9;
         size_t invalidMoveCount = 0;
         do {
-          move = m_player2->getMove(m_board, 'O', true);
+          move = m_player2->getMove(m_board, 'O');
           ++invalidMoveCount;
           //if (invalidMoveCount > 9) {
           //  assert(false);
@@ -110,20 +110,20 @@ void Game::play(bool printSteps, std::ostream& os) {
   }
 
   if (winner == PLAYER_1) {
-    m_player1->reportWinner(m_board, true);
-    m_player2->reportWinner(m_board, false);
+    m_player1->reportWinner(m_board, Player::Win);
+    m_player2->reportWinner(m_board, Player::Lose);
     if (printSteps) {
       os << "Player 1 wins!" << std::endl;
     }
   } else if (winner == PLAYER_2) {
-    m_player1->reportWinner(m_board, false);
-    m_player2->reportWinner(m_board, true);
+    m_player1->reportWinner(m_board, Player::Lose);
+    m_player2->reportWinner(m_board, Player::Win);
     if (printSteps) {
       os << "Player2 wins!" << std::endl;
     }
   } else {
-    m_player1->reportWinner(m_board, false);
-    m_player2->reportWinner(m_board, false);
+    m_player1->reportWinner(m_board, Player::Draw);
+    m_player2->reportWinner(m_board, Player::Draw);
     if (printSteps) {
       os << "Game is a draw!" << std::endl;
     }

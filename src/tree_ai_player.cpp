@@ -15,6 +15,8 @@
 #include "tree_ai_player.h"
 
 #include <cassert>
+#include <iostream>
+#include <vector>
 
 struct TreeAIPlayer::BoardNode {
   BoardNode* parent{nullptr};
@@ -28,7 +30,7 @@ struct TreeAIPlayer::BoardNode {
   size_t movePlayed{9};
 
   // The winning score of this chain of nodes.
-  int score{0};
+  __int64 score{0};
 
   void appendChild(BoardNode* newNode) {
     newNode->parent = this;
@@ -56,8 +58,7 @@ void TreeAIPlayer::setIsTraining(bool isTraining) {
   m_isTraining = isTraining;
 }
 
-size_t TreeAIPlayer::getMove(const Board& board, char you,
-                             bool previousMoveWasValid) {
+size_t TreeAIPlayer::getMove(const Board& board, char you) {
   // If the board is empty, it means we're the first one to make a move in this
   // game.
   if (board.isEmpty()) {
@@ -92,7 +93,7 @@ size_t TreeAIPlayer::getMove(const Board& board, char you,
   return bestMove;
 }
 
-void TreeAIPlayer::reportWinner(const Board& winningBoard, bool won) {
+void TreeAIPlayer::reportWinner(const Board& winningBoard, WinType winType) {
   // If the current node isn't the move that won the game, then we have to log
   // the other player's move.
   if (m_currentNode->board != winningBoard) {
@@ -102,7 +103,19 @@ void TreeAIPlayer::reportWinner(const Board& winningBoard, bool won) {
   // Now the current node is pointing to the node that won/lost the game, so if
   // we won, add a win to the score.
   for (BoardNode* current = m_currentNode; current; current = current->parent) {
-    current->score += 2;
+    switch (winType) {
+    case Win:
+      current->score += 2;
+      break;
+
+    case Draw:
+      current->score += 1;
+      break;
+
+    case Lose:
+      current->score += 0;
+      break;
+    }
   }
 
   // When there was a winner, we reset our state.
@@ -133,11 +146,16 @@ size_t TreeAIPlayer::getBestMoveForNode(BoardNode* startingNode) {
   // Go through all the children and make note of the best node, the child count
   // and the moves played.  If we are training, then we select the worst node
   // just to see if we can't win with it.
+  std::vector<BoardNode*> trainingNodes;
+
   BoardNode* bestNode = nullptr;
-  int bestScore = m_isTraining ? std::numeric_limits<int>::max() : 0;
+  int bestScore = m_isTraining ? std::numeric_limits<int>::max()
+                               : std::numeric_limits<int>::min();
   int childCount = 0;
   for (BoardNode* current = startingNode->firstChild; current;
        current = current->next) {
+    trainingNodes.emplace_back(current);
+
     if ((m_isTraining && current->score < bestScore) ||
         (!m_isTraining && current->score > bestScore)) {
       bestScore = current->score;
@@ -158,11 +176,12 @@ size_t TreeAIPlayer::getBestMoveForNode(BoardNode* startingNode) {
     return index;
   }
 
+  if (m_isTraining) {
+    return trainingNodes[std::rand() % trainingNodes.size()]->movePlayed;
+  }
+
   // If we've played all the moves, but we can't find one with the best score,
   // something went wrong.
-  if (!bestNode) {
-    int a = 10;
-  }
   assert(bestNode);
 
   // Play the best move.

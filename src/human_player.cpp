@@ -19,13 +19,12 @@
 HumanPlayer::~HumanPlayer() {
 }
 
-size_t HumanPlayer::getMove(const Board& board, char you,
-                            bool previousMoveWasValid) {
+size_t HumanPlayer::getMove(const Board& board, char you) {
   std::cout << "Enter move: ";
   int move = 10;
   std::cin >> move;
   return move;
 }
 
-void HumanPlayer::reportWinner(const Board& board, bool won) {
+void HumanPlayer::reportWinner(const Board& board, WinType winType) {
 }

@@ -19,11 +19,16 @@
 
 class Player {
 public:
+  enum WinType {
+    Win,
+    Lose,
+    Draw,
+  };
+
   virtual ~Player();
 
-  virtual size_t getMove(const Board& board, char you,
-                         bool previousMoveWasValid) = 0;
-  virtual void reportWinner(const Board& board, bool won) = 0;
+  virtual size_t getMove(const Board& board, char you) = 0;
+  virtual void reportWinner(const Board& board, WinType winType) = 0;
 };
 
 #endif  // PLAYER_H_
