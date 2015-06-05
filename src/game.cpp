@@ -26,7 +26,7 @@ void Game::setPlayer2(Player* player) {
   m_player2 = player;
 }
 
-void Game::play(std::ostream& os) {
+void Game::play(bool printSteps, std::ostream& os) {
   m_currentPlayer = PLAYER_1;
 
   // Cannot start game without players.
@@ -36,25 +36,29 @@ void Game::play(std::ostream& os) {
   PlayerType winner = PLAYER_UNKNOWN;
 
   for (;;) {
-    m_board.print(os, true);
+    if (printSteps) {
+      m_board.print(os, true);
+    }
 
-    char move = -1;
+    size_t move = 9999;
     switch (m_currentPlayer) {
       case PLAYER_1:
-        os << "Player 1 (X)" << std::endl;
-        move = m_player1->getMove(m_board, true);
+        if (printSteps) {
+          os << "Player 1 (X)" << std::endl;
+        }
+        move = m_player1->getMove(m_board, 'X', true);
         while (!m_board.setMove(move, 'X'))
-          move = m_player1->getMove(m_board, false);
-        m_player1->afterMove(m_board);
+          move = m_player1->getMove(m_board, 'X', false);
         m_currentPlayer = PLAYER_2;
         break;
 
       case PLAYER_2:
-        os << "Player 2 (O)" << std::endl;
-        move = m_player2->getMove(m_board, true);
+        if (printSteps) {
+          os << "Player 2 (O)" << std::endl;
+        }
+        move = m_player2->getMove(m_board, 'O', true);
         while (!m_board.setMove(move, 'O'))
-          move = m_player2->getMove(m_board, false);
-        m_player2->afterMove(m_board);
+          move = m_player2->getMove(m_board, 'O', false);
         m_currentPlayer = PLAYER_1;
         break;
 
@@ -72,22 +76,41 @@ void Game::play(std::ostream& os) {
     } else if (m_board.isFull())
       break;
 
-    os << std::endl;
+    if (printSteps) {
+      os << std::endl;
+    }
   }
 
-  os << std::endl;
-  os << "Winning board:" << std::endl;
+  if (printSteps) {
+    os << std::endl;
+    os << "Winning board:" << std::endl;
+  }
 
   // Print the final board without instructions.
-  m_board.print(os, false);
+  if (printSteps) {
+    m_board.print(os, false);
+  }
 
   if (winner == PLAYER_1) {
-    m_player1->reportWinner(m_board);
-    os << "Player 1 wins!" << std::endl;
+    m_player1->reportWinner(m_board, true);
+    m_player2->reportWinner(m_board, false);
+    if (printSteps) {
+      os << "Player 1 wins!" << std::endl;
+    }
   } else if (winner == PLAYER_2) {
-    m_player2->reportWinner(m_board);
-    os << "Player2 wins!" << std::endl;
+    m_player1->reportWinner(m_board, false);
+    m_player2->reportWinner(m_board, true);
+    if (printSteps) {
+      os << "Player2 wins!" << std::endl;
+    }
   } else {
-    os << "Game is a draw!" << std::endl;
+    m_player1->reportWinner(m_board, false);
+    m_player2->reportWinner(m_board, false);
+    if (printSteps) {
+      os << "Game is a draw!" << std::endl;
+    }
   }
+
+  // Reset the game.
+  m_board = Board();
 }

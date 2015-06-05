@@ -23,12 +23,10 @@ DumbAIPlayer::DumbAIPlayer() {
 DumbAIPlayer::~DumbAIPlayer() {
 }
 
-size_t DumbAIPlayer::getMove(const Board& board, bool previousMoveWasValid) {
+size_t DumbAIPlayer::getMove(const Board& board, char you,
+                             bool previousMoveWasValid) {
   return rand() % 9;
 }
 
-void DumbAIPlayer::afterMove(const Board& board) {
-}
-
-void DumbAIPlayer::reportWinner(const Board& board) {
+void DumbAIPlayer::reportWinner(const Board& board, bool won) {
 }

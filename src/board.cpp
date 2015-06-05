@@ -39,6 +39,10 @@ void Board::print(std::ostream& os, bool instructions) const {
 }
 
 bool Board::setMove(size_t position, char player) {
+  if (position >= m_board.size()) {
+    return false;
+  }
+
   // If there is already something in that position, then we can't make that
   // move.
   if (m_board[position] != ' ')
@@ -50,7 +54,8 @@ bool Board::setMove(size_t position, char player) {
 
 bool Board::isEmpty() const {
   // The board is empty if if there are open spaces.
-  return std::count(std::begin(m_board), std::end(m_board), ' ') != 0;
+  return std::count(std::begin(m_board), std::end(m_board), ' ') ==
+         m_board.size();
 }
 
 bool Board::isFull() const {

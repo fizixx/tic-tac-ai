@@ -23,9 +23,9 @@ public:
   DumbAIPlayer();
   virtual ~DumbAIPlayer();
 
-  size_t getMove(const Board& board, bool previousMoveWasValid) override;
-  void afterMove(const Board& board) override;
-  void reportWinner(const Board& board) override;
+  size_t getMove(const Board& board, char you,
+                 bool previousMoveWasValid) override;
+  void reportWinner(const Board& board, bool won) override;
 };
 
 #endif  // DUMB_PLAYER_H_

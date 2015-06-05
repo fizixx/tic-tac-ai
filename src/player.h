@@ -21,9 +21,9 @@ class Player {
 public:
   virtual ~Player();
 
-  virtual size_t getMove(const Board& board, bool previousMoveWasValid) = 0;
-  virtual void afterMove(const Board& board) = 0;
-  virtual void reportWinner(const Board& board) = 0;
+  virtual size_t getMove(const Board& board, char you,
+                         bool previousMoveWasValid) = 0;
+  virtual void reportWinner(const Board& board, bool won) = 0;
 };
 
 #endif  // PLAYER_H_

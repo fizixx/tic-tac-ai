@@ -23,12 +23,20 @@
 int main() {
   std::cout << "tic-tac-ai" << std::endl;
 
-  // HumanPlayer
   Game game;
-  game.setPlayer1(new HumanPlayer());
-  game.setPlayer2(new DumbAIPlayer());
 
-  game.play(std::cout);
+  TreeAIPlayer* smartPlayer = new TreeAIPlayer;
+
+  game.setPlayer1(smartPlayer);
+  game.setPlayer2(new DumbAIPlayer);
+
+  for (auto i = 0; i < 10000; ++i) {
+    game.play(false, std::cout);
+  }
+
+  // Now play against the trained AI.
+  game.setPlayer2(new HumanPlayer);
+  game.play(true);
 
   return 0;
 }

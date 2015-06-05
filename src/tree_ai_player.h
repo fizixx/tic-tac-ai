@@ -22,20 +22,29 @@ public:
   TreeAIPlayer();
   ~TreeAIPlayer() override;
 
-  size_t getMove(const Board& board, bool previousMoveWasValid) override;
-  void afterMove(const Board& board) override;
-  void reportWinner(const Board& board) override;
+  size_t getMove(const Board& board, char you, bool previousMoveWasValid) override;
+  void reportWinner(const Board& board, bool won) override;
 
 private:
   struct BoardNode;
 
   // Given a |parentNode|, find a child node who's board is the same as the
   // given |board|.
-  BoardNode* FindBoardInNode(BoardNode* parentNode, const Board& board) const;
+  BoardNode* findBoardInNode(BoardNode* parentNode, const Board& board) const;
 
   // Play a move we haven't encountered before.  |board| is the current board we
   // are playing against.
-  void PlayUnknownMove(const Board& board);
+  void playUnknownMove(const Board& board);
+
+  size_t getBestMoveForNode(BoardNode* startingNode);
+
+  // Log the current move in our database of moves.  Returns the newly inserted
+  // node.
+  BoardNode* logMove(BoardNode* node, const Board& board, size_t move,
+                     char you);
+
+  // Log a move from the other player.
+  BoardNode* logOtherMove(BoardNode* node, const Board board);
 
   // The root of all the board nodes.
   BoardNode* m_rootNode;

@@ -15,6 +15,8 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include <iostream>
+
 #include "board.h"
 #include "player.h"
 
@@ -25,7 +27,7 @@ public:
   void setPlayer1(Player* player);
   void setPlayer2(Player* player);
 
-  void play(std::ostream& os);
+  void play(bool printSteps, std::ostream& os = std::cout);
 
 private:
   enum PlayerType {
