@@ -1,3 +1,16 @@
+// Copyright (c) 2015, Tiaan Louw
+//
+// Permission to use, copy, modify, and/or distribute this software for any
+// purpose with or without fee is hereby granted, provided that the above
+// copyright notice and this permission notice appear in all copies.
+//
+// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+// REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+// AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+// INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+// LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+// OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+// PERFORMANCE OF THIS SOFTWARE.
 
 #include "board.h"
 #include <algorithm>
@@ -14,18 +27,18 @@ bool Board::operator!=(const Board& other) const {
   return !(*this == other);
 }
 
-void Board::Print(std::ostream& os, bool instructions) const {
-  os << ' ' << GetCell(0, instructions) << " | " << GetCell(1, instructions)
-     << " | " << GetCell(2, instructions) << ' ' << std::endl;
+void Board::print(std::ostream& os, bool instructions) const {
+  os << ' ' << getCell(0, instructions) << " | " << getCell(1, instructions)
+     << " | " << getCell(2, instructions) << ' ' << std::endl;
   os << "---+---+---" << std::endl;
-  os << ' ' << GetCell(3, instructions) << " | " << GetCell(4, instructions)
-     << " | " << GetCell(5, instructions) << ' ' << std::endl;
+  os << ' ' << getCell(3, instructions) << " | " << getCell(4, instructions)
+     << " | " << getCell(5, instructions) << ' ' << std::endl;
   os << "---+---+---" << std::endl;
-  os << ' ' << GetCell(6, instructions) << " | " << GetCell(7, instructions)
-     << " | " << GetCell(8, instructions) << ' ' << std::endl;
+  os << ' ' << getCell(6, instructions) << " | " << getCell(7, instructions)
+     << " | " << getCell(8, instructions) << ' ' << std::endl;
 }
 
-bool Board::SetMove(size_t position, char player) {
+bool Board::setMove(size_t position, char player) {
   // If there is already something in that position, then we can't make that
   // move.
   if (m_board[position] != ' ')
@@ -35,17 +48,17 @@ bool Board::SetMove(size_t position, char player) {
   return true;
 }
 
-bool Board::IsEmpty() const {
+bool Board::isEmpty() const {
   // The board is empty if if there are open spaces.
   return std::count(std::begin(m_board), std::end(m_board), ' ') != 0;
 }
 
-bool Board::IsFull() const {
+bool Board::isFull() const {
   // The board is full if there are no more open spaces.
   return std::count(std::begin(m_board), std::end(m_board), ' ') == 0;
 }
 
-size_t Board::GetFirstOpenCell() const {
+size_t Board::getFirstOpenCell() const {
   for (size_t i = 0; i < m_board.size(); ++i) {
     if (m_board[i] == ' ') {
       return i;
@@ -55,35 +68,35 @@ size_t Board::GetFirstOpenCell() const {
   return m_board.size();
 }
 
-char Board::GetWinner() const {
-  if (IsWinner(0, 1, 2))
+char Board::getWinner() const {
+  if (isWinner(0, 1, 2))
     return m_board[0];
 
-  if (IsWinner(3, 4, 5))
+  if (isWinner(3, 4, 5))
     return m_board[3];
 
-  if (IsWinner(6, 7, 8))
+  if (isWinner(6, 7, 8))
     return m_board[4];
 
-  if (IsWinner(0, 3, 6))
+  if (isWinner(0, 3, 6))
     return m_board[0];
 
-  if (IsWinner(1, 4, 7))
+  if (isWinner(1, 4, 7))
     return m_board[1];
 
-  if (IsWinner(2, 5, 8))
+  if (isWinner(2, 5, 8))
     return m_board[5];
 
-  if (IsWinner(0, 4, 8))
+  if (isWinner(0, 4, 8))
     return m_board[0];
 
-  if (IsWinner(2, 4, 6))
+  if (isWinner(2, 4, 6))
     return m_board[2];
 
   return ' ';
 }
 
-bool Board::IsWinner(size_t pos1, size_t pos2, size_t pos3) const {
+bool Board::isWinner(size_t pos1, size_t pos2, size_t pos3) const {
   if (m_board[pos1] == ' ')
     return false;
 
@@ -96,7 +109,7 @@ bool Board::IsWinner(size_t pos1, size_t pos2, size_t pos3) const {
   return true;
 }
 
-char Board::GetCell(size_t position, bool instructions) const {
+char Board::getCell(size_t position, bool instructions) const {
   if (m_board[position] == ' ' && instructions)
     return '0' + position;
   return m_board[position];
