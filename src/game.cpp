@@ -42,25 +42,43 @@ void Game::play(bool printSteps, std::ostream& os) {
 
     size_t move = 9999;
     switch (m_currentPlayer) {
-      case PLAYER_1:
+      case PLAYER_1: {
         if (printSteps) {
           os << "Player 1 (X)" << std::endl;
         }
-        move = m_player1->getMove(m_board, 'X', true);
-        while (!m_board.setMove(move, 'X'))
-          move = m_player1->getMove(m_board, 'X', false);
-        m_currentPlayer = PLAYER_2;
-        break;
 
-      case PLAYER_2:
+        size_t move = 9;
+        size_t invalidMoveCount = 0;
+        do {
+          move = m_player1->getMove(m_board, 'X', true);
+          ++invalidMoveCount;
+          //if (invalidMoveCount > 9) {
+          //  assert(false);
+          //  return;
+          //}
+        } while (!m_board.setMove(move, 'X'));
+
+        m_currentPlayer = PLAYER_2;
+      } break;
+
+      case PLAYER_2: {
         if (printSteps) {
           os << "Player 2 (O)" << std::endl;
         }
-        move = m_player2->getMove(m_board, 'O', true);
-        while (!m_board.setMove(move, 'O'))
-          move = m_player2->getMove(m_board, 'O', false);
+
+        size_t move = 9;
+        size_t invalidMoveCount = 0;
+        do {
+          move = m_player2->getMove(m_board, 'O', true);
+          ++invalidMoveCount;
+          //if (invalidMoveCount > 9) {
+          //  assert(false);
+          //  return;
+          //}
+        } while (!m_board.setMove(move, 'O'));
+
         m_currentPlayer = PLAYER_1;
-        break;
+      } break;
 
       default:
         break;

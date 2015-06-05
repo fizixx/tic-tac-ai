@@ -15,8 +15,6 @@
 #include "tree_ai_player.h"
 
 #include <cassert>
-#include <iostream>
-#include <vector>
 
 struct TreeAIPlayer::BoardNode {
   BoardNode* parent{nullptr};
@@ -54,6 +52,10 @@ TreeAIPlayer::TreeAIPlayer() : m_rootNode(new BoardNode) {
 TreeAIPlayer::~TreeAIPlayer() {
 }
 
+void TreeAIPlayer::setIsTraining(bool isTraining) {
+  m_isTraining = isTraining;
+}
+
 size_t TreeAIPlayer::getMove(const Board& board, char you,
                              bool previousMoveWasValid) {
   // If the board is empty, it means we're the first one to make a move in this
@@ -73,13 +75,9 @@ size_t TreeAIPlayer::getMove(const Board& board, char you,
       m_currentNode = m_rootNode;
     }
 
-    // Find the move that the other player made from the current node.
-    BoardNode* foundNode = findBoardInNode(m_currentNode, board);
-
-    // If we can't find the other player's board, then it means we haven't
-    // encountered that move yet, so we have to log it.  Otherwise we use the
-    // node that we found.
-    m_currentNode = foundNode ? foundNode : logOtherMove(m_currentNode, board);
+    // We log the other player's move.  If we haven't encountered this move
+    // before, it will be added, otherwise the known node will be returned.
+    m_currentNode = logOtherMove(m_currentNode, board);
   }
 
   // We should have a current node now.
@@ -122,29 +120,52 @@ TreeAIPlayer::BoardNode* TreeAIPlayer::findBoardInNode(
 }
 
 size_t TreeAIPlayer::getBestMoveForNode(BoardNode* startingNode) {
-  // Find the node with the highest score.
+  std::array<bool, 9> movesPlayed;
+  movesPlayed.fill(false);
+
+  // Add the previous board's moves to the played moves.
+  for (size_t i = 0; i < 9; ++i) {
+    if (startingNode->board.getMove(i) != ' ') {
+      movesPlayed[i] = true;
+    }
+  }
+
+  // Go through all the children and make note of the best node, the child count
+  // and the moves played.  If we are training, then we select the worst node
+  // just to see if we can't win with it.
   BoardNode* bestNode = nullptr;
-  int bestScore = 0;
+  int bestScore = m_isTraining ? std::numeric_limits<int>::max() : 0;
   int childCount = 0;
   for (BoardNode* current = startingNode->firstChild; current;
        current = current->next) {
-    if (current->score > bestScore) {
+    if ((m_isTraining && current->score < bestScore) ||
+        (!m_isTraining && current->score > bestScore)) {
       bestScore = current->score;
       bestNode = current;
     }
     ++childCount;
+
+    // The node can't be a node that the other player played.
+    assert(current->movePlayed != 9);
+    movesPlayed[current->movePlayed] = true;
   }
 
-  // If we can't get a high score node or we haven't played all the options yet,
-  // return a "random" choice.
-  if (childCount < 9 || !bestNode) {
-    return startingNode->board.getFirstOpenCell();
+  // If we haven't played all the options yet, select the first available
+  // option.
+  auto it = std::find(std::begin(movesPlayed), std::end(movesPlayed), false);
+  if (it != std::end(movesPlayed)) {
+    size_t index = std::distance(std::begin(movesPlayed), it);
+    return index;
   }
 
+  // If we've played all the moves, but we can't find one with the best score,
+  // something went wrong.
+  if (!bestNode) {
+    int a = 10;
+  }
   assert(bestNode);
-  // It should be a valid move.
-  assert(bestNode->movePlayed != 9);
 
+  // Play the best move.
   return bestNode->movePlayed;
 }
 

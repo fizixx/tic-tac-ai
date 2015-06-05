@@ -22,6 +22,9 @@ public:
   TreeAIPlayer();
   ~TreeAIPlayer() override;
 
+  // Set whether the player is training of playing.
+  void setIsTraining(bool isTraining);
+
   size_t getMove(const Board& board, char you, bool previousMoveWasValid) override;
   void reportWinner(const Board& board, bool won) override;
 
@@ -51,6 +54,9 @@ private:
 
   // The current node we are looking at.
   BoardNode* m_currentNode{nullptr};
+
+  // Whether the player is playing or training.
+  bool m_isTraining{false};
 };
 
 #endif  // PLAYER_H_

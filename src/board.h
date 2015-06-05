@@ -27,6 +27,7 @@ public:
 
   void print(std::ostream& os, bool instructions) const;
 
+  char getMove(size_t position) const { return m_board[position]; }
   bool setMove(size_t position, char player);
 
   bool isEmpty() const;

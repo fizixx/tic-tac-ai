@@ -26,15 +26,20 @@ int main() {
   Game game;
 
   TreeAIPlayer* smartPlayer = new TreeAIPlayer;
+  smartPlayer->setIsTraining(true);
 
   game.setPlayer1(smartPlayer);
   game.setPlayer2(new DumbAIPlayer);
 
-  for (auto i = 0; i < 10000; ++i) {
+  for (auto i = 0; i < 100000; ++i) {
+    if (i % 1000 == 0) {
+      std::cout << i << "\r";
+    }
     game.play(false, std::cout);
   }
 
   // Now play against the trained AI.
+  smartPlayer->setIsTraining(false);
   game.setPlayer2(new HumanPlayer);
   game.play(true);
 
