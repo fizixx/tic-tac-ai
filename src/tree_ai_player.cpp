@@ -55,7 +55,7 @@ TreeAIPlayer::~TreeAIPlayer() {
 }
 
 void TreeAIPlayer::setIsTraining(bool isTraining) {
-  m_isTraining = isTraining;
+  m_isTraining = isTraining;  
 }
 
 size_t TreeAIPlayer::getMove(const Board& board, char you) {
@@ -109,11 +109,11 @@ void TreeAIPlayer::reportWinner(const Board& winningBoard, WinType winType) {
       break;
 
     case Draw:
-      current->score += 1;
+      current->score += 0;
       break;
 
     case Lose:
-      current->score += 0;
+      current->score += -4;
       break;
     }
   }

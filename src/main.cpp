@@ -18,6 +18,7 @@
 #include "game.h"
 #include "dumb_ai_player.h"
 #include "human_player.h"
+#include "strategy_ai_player.h"
 #include "tree_ai_player.h"
 
 int main() {
@@ -30,8 +31,16 @@ int main() {
   smartPlayer1->setIsTraining(true);
 
   game.setPlayer1(smartPlayer1);
-  game.setPlayer2(new DumbAIPlayer);
 
+  game.setPlayer2(new StrategyAIPlayer);
+  for (auto i = 0; i < 100000; ++i) {
+    if (i % 1000 == 0) {
+      std::cout << i << "\r";
+    }
+    game.play(false, std::cout);
+  }
+
+  game.setPlayer2(new DumbAIPlayer);
   for (auto i = 0; i < 100000; ++i) {
     if (i % 1000 == 0) {
       std::cout << i << "\r";
@@ -41,11 +50,13 @@ int main() {
 
   // Now play against the trained AI.
   smartPlayer1->setIsTraining(false);
-  game.setPlayer1(new HumanPlayer);
-  game.play(true);
+  game.setPlayer2(new HumanPlayer);
+  while (true) {
+    game.play(true);
+  }
 #else
   game.setPlayer1(new HumanPlayer);
-  game.setPlayer2(new DumbAIPlayer);
+  game.setPlayer2(new StrategyAIPlayer);
   game.play(true);
 #endif  // 0
   
