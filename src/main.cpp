@@ -11,7 +11,7 @@ int main() {
 
   // HumanPlayer
   Game game;
-  game.SetPlayer1(new TreeAIPlayer());
+  game.SetPlayer1(new HumanPlayer());
   game.SetPlayer2(new DumbAIPlayer());
 
   game.Play(std::cout);
